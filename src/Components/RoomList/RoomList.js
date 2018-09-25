@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import MessageList from '../MessageList/MessageList';
 
 class RoomList extends Component {
     constructor(props) {
@@ -7,12 +8,11 @@ class RoomList extends Component {
             rooms: []
         };
         this.roomsRef = this.props.firebase.database().ref('rooms');
-        this.handleClick = this.handleClick.bind(this);
+        this.handleButtonClick = this.handleButtonClick.bind(this);
     }
 
     componentDidMount() {
         this.roomsRef.on('child_added', snapshot => {
-            console.log(snapshot.val());
             const room = snapshot.val();
             room.key = snapshot.key;
             this.setState({rooms: this.state.rooms.concat(room)});
@@ -23,7 +23,7 @@ class RoomList extends Component {
         this.roomsRef.push({name: newRoomName});
     }
 
-    handleClick(event) {
+    handleButtonClick(event) {
         event.preventDefault(); // prevent submit on click
         this.createRoom(event.target.parentNode.firstChild.value); // pass value of text box to createRoom()
         event.target.parentNode.firstChild.value = ''; // reset text box text
@@ -33,12 +33,17 @@ class RoomList extends Component {
         return (
             <div>
                 <ul>
-                    {this.state.rooms.map(room => <li key={room.key}>{room.name}</li>)}
+                    {this.state.rooms.map(room => {
+                        return room.key === this.props.activeRoom ?
+                            <li key={room.key} onClick={this.props.handleRoomClick} className='active-room' id={room.key}>{room.name}</li> :
+                            <li key={room.key} onClick={this.props.handleRoomClick} id={room.key}>{room.name}</li>
+                    })}
                 </ul>
                 <form>
-                    <input type="text"/>
-                    <button onClick={this.handleClick}>Submit</button>
+                    <input type="text" placeholder="Add a new chat room.."/>
+                    <button onClick={this.handleButtonClick}>Submit</button>
                 </form>
+                <MessageList firebase={this.props.firebase} activeRoom={this.props.activeRoom}/>
             </div>
         )
     }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from '../../logo.svg';
 import './App.css';
 import * as firebase from 'firebase';
 import RoomList from '../RoomList/RoomList';
@@ -15,12 +14,24 @@ let config = {
 firebase.initializeApp(config);
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-          <RoomList firebase={firebase}/>
-      </div>
-    );
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeRoom: ''
+        };
+        this.handleRoomClick = this.handleRoomClick.bind(this);
+    }
+
+    handleRoomClick(event) {
+        this.setState({activeRoom: event.target.id});
+    }
+
+    render() {
+        return (
+          <div className="App">
+              <RoomList firebase={firebase} activeRoom={this.state.activeRoom} handleRoomClick={this.handleRoomClick}/>
+          </div>
+        );
   }
 }
 
