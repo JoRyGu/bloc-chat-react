@@ -30,7 +30,7 @@ class MessageList extends Component {
             content: content,
             roomId: this.props.activeRoom,
             sentAt: this.props.firebase.database.ServerValue.TIMESTAMP,
-            userName: '<Username here>'
+            userName: this.props.activeUser === null ? 'Guest' : this.props.activeUser.displayName
         })
     }
 

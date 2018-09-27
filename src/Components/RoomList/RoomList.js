@@ -43,7 +43,7 @@ class RoomList extends Component {
                     <input type="text" placeholder="Add a new chat room.."/>
                     <button onClick={this.handleButtonClick}>Submit</button>
                 </form>
-                <MessageList firebase={this.props.firebase} activeRoom={this.props.activeRoom}/>
+                <MessageList firebase={this.props.firebase} activeRoom={this.props.activeRoom} activeUser={this.props.activeUser}/>
             </div>
         )
     }
